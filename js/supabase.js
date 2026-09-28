@@ -8,8 +8,7 @@
 
 const SUPABASE_CONFIG = {
   url: "https://hiajsyehskhqylvpynxn.supabase.co",
-  // A chave anon pública pode ser definida aqui ou configurada pelo Painel Admin
-  anonKey: ""
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpYWpzeWVoc2tocXlsdnB5bnhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MTA5NTUsImV4cCI6MjEwNjE4Njk1NX0.GrzGKOXkt9D0EHCcXmkYEyvcCEAuNyfZXfOsPc7pB3c"
 };
 
 var _supabaseClient = null;
