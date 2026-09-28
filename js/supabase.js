@@ -41,17 +41,7 @@ async function loadFromSupabase(forceRefresh) {
     return null;
   }
 
-  // Cache de 5 minutos no sessionStorage para evitar requisições a cada F5 do mesmo usuário
-  var cacheKey = "portfolio_supabase_cache_time";
-  var lastFetch = sessionStorage.getItem(cacheKey);
-  var now = Date.now();
-
-  if (!forceRefresh && lastFetch && (now - parseInt(lastFetch, 10)) < 300000) {
-    console.log("[Supabase] Cache válido — usando dados locais. Próxima busca em", Math.round((300000 - (now - parseInt(lastFetch, 10))) / 1000) + "s");
-    return null;
-  }
-
-  console.log("[Supabase] Buscando dados do banco...");
+  console.log("[Supabase] Buscando dados atualizados do banco...");
 
   try {
     var response = await client
@@ -67,7 +57,6 @@ async function loadFromSupabase(forceRefresh) {
 
     if (response.data && response.data.data && typeof response.data.data === "object") {
       console.log("[Supabase] ✅ Dados carregados do banco com sucesso!");
-      sessionStorage.setItem(cacheKey, String(now));
       return response.data.data;
     }
 
@@ -116,9 +105,6 @@ async function saveToSupabase(portfolioData) {
   }
 
   console.log("[Supabase] ✅ Confirmado no banco! Atualizado em:", check.data.updated_at);
-
-  // Invalida cache local para forçar releitura na próxima visita
-  sessionStorage.removeItem("portfolio_supabase_cache_time");
   return true;
 }
 
