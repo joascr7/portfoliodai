@@ -1,0 +1,378 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Admin — Portfólio Daiane Rosana</title>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="assets/logo.jpg" alt="Logo" class="sidebar-logo" />
+    <div>
+      <div class="sidebar-title">Painel Admin</div>
+      <div class="sidebar-sub">Portfólio Daiane Rosana</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav" role="navigation" aria-label="Menu do painel">
+    <button class="sidebar-btn active" data-panel="identity">
+      <span class="s-icon">👤</span> Identidade
+    </button>
+    <button class="sidebar-btn" data-panel="theme">
+      <span class="s-icon">🎨</span> Cores e Fontes
+    </button>
+    <button class="sidebar-btn" data-panel="about">
+      <span class="s-icon">📝</span> Sobre Mim
+    </button>
+    <button class="sidebar-btn" data-panel="education">
+      <span class="s-icon">🎓</span> Formação
+    </button>
+    <button class="sidebar-btn" data-panel="activities">
+      <span class="s-icon">📋</span> Atividades
+    </button>
+    <button class="sidebar-btn" data-panel="contact">
+      <span class="s-icon">✉️</span> Contato
+    </button>
+    <button class="sidebar-btn" data-panel="sections">
+      <span class="s-icon">⚙️</span> Seções
+    </button>
+    <button class="sidebar-btn" data-panel="images">
+      <span class="s-icon">🖼️</span> Imagens
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="btn-save" id="btn-save-all">💾 Salvar Tudo</button>
+    <a href="index.html" class="btn-preview" target="_blank" rel="noopener">👁 Ver Portfólio</a>
+    <button class="btn-reset" id="btn-reset">↩ Restaurar Padrão</button>
+  </div>
+</aside>
+
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menu">&#9776;</button>
+
+<main class="admin-main" id="admin-main">
+
+  <!-- ── IDENTIDADE ── -->
+  <section class="panel" id="panel-identity">
+    <div class="panel-header">
+      <h1 class="panel-title">👤 Identidade</h1>
+      <p class="panel-sub">Informações principais exibidas no portfólio.</p>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="f-name">Nome Completo</label>
+        <input type="text" class="form-input" id="f-name" placeholder="Daiane Rosana" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-role">Cargo / Função</label>
+        <input type="text" class="form-input" id="f-role" placeholder="Apoio Administrativo" />
+      </div>
+      <div class="form-group full">
+        <label class="form-label" for="f-subtitle">Subtítulo (hero)</label>
+        <input type="text" class="form-input" id="f-subtitle" placeholder="Profissional dedicada à excelência administrativa" />
+      </div>
+      <div class="form-group full">
+        <label class="form-label" for="f-meta-title">Título da Página (SEO)</label>
+        <input type="text" class="form-input" id="f-meta-title" />
+      </div>
+      <div class="form-group full">
+        <label class="form-label" for="f-meta-desc">Descrição SEO</label>
+        <textarea class="form-input" id="f-meta-desc" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-nav-logo-text">Texto do Logo na Navbar</label>
+        <input type="text" class="form-input" id="f-nav-logo-text" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-footer-copy">Texto do Rodapé</label>
+        <input type="text" class="form-input" id="f-footer-copy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CORES E FONTES ── -->
+  <section class="panel hidden" id="panel-theme">
+    <div class="panel-header">
+      <h1 class="panel-title">🎨 Cores e Fontes</h1>
+      <p class="panel-sub">Personalize toda a paleta e tipografia do portfólio.</p>
+    </div>
+    <div class="color-section-title">Paleta de Cores</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Fundo Principal (Bordô escuro)</label>
+        <div class="color-row">
+          <input type="color" class="color-picker" id="f-wine" value="#150810" />
+          <input type="text" class="form-input color-text" id="f-wine-text" value="#150810" maxlength="7" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fundo Secundário (Seções alternadas)</label>
+        <div class="color-row">
+          <input type="color" class="color-picker" id="f-wine-mid" value="#1f0d16" />
+          <input type="text" class="form-input color-text" id="f-wine-mid-text" value="#1f0d16" maxlength="7" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fundo dos Cards (Vinho médio)</label>
+        <div class="color-row">
+          <input type="color" class="color-picker" id="f-wine-light" value="#3d1a2a" />
+          <input type="text" class="form-input color-text" id="f-wine-light-text" value="#3d1a2a" maxlength="7" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cor de Destaque (Rosé principal)</label>
+        <div class="color-row">
+          <input type="color" class="color-picker" id="f-rose" value="#c4869a" />
+          <input type="text" class="form-input color-text" id="f-rose-text" value="#c4869a" maxlength="7" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Destaque Claro (Rosé claro / botões)</label>
+        <div class="color-row">
+          <input type="color" class="color-picker" id="f-rose-light" value="#e8b4c4" />
+          <input type="text" class="form-input color-text" id="f-rose-light-text" value="#e8b4c4" maxlength="7" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Texto Principal</label>
+        <div class="color-row">
+          <input type="color" class="color-picker" id="f-text-main" value="#f0dde5" />
+          <input type="text" class="form-input color-text" id="f-text-main-text" value="#f0dde5" maxlength="7" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Texto Secundário (Parágrafos)</label>
+        <div class="color-row">
+          <input type="color" class="color-picker" id="f-text-muted" value="#a07080" />
+          <input type="text" class="form-input color-text" id="f-text-muted-text" value="#a07080" maxlength="7" />
+        </div>
+      </div>
+    </div>
+    <div class="color-section-title" style="margin-top:1.5rem">Tipografia</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="f-font-body">Fonte do Corpo</label>
+        <select class="form-input" id="f-font-body">
+          <option value="Jost">Jost (atual — moderna)</option>
+          <option value="Outfit">Outfit</option>
+          <option value="Inter">Inter</option>
+          <option value="Poppins">Poppins</option>
+          <option value="Nunito">Nunito (suave)</option>
+          <option value="DM Sans">DM Sans</option>
+          <option value="Roboto">Roboto</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-font-accent">Fonte dos Títulos</label>
+        <select class="form-input" id="f-font-accent">
+          <option value="Cormorant Garamond">Cormorant Garamond (atual — elegante)</option>
+          <option value="Playfair Display">Playfair Display</option>
+          <option value="Lora">Lora</option>
+          <option value="Merriweather">Merriweather</option>
+          <option value="Jost">Jost (sem serifa)</option>
+          <option value="Outfit">Outfit (sem serifa)</option>
+        </select>
+      </div>
+    </div>
+    <div class="theme-preview" id="theme-preview">
+      <div class="tp-inner">
+        <div class="tp-tag">Qualificação</div>
+        <div class="tp-title">Formação Acadêmica</div>
+        <div class="tp-text">Exemplo de texto com as cores e fontes selecionadas acima.</div>
+        <div class="tp-badge">Em andamento</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SOBRE MIM ── -->
+  <section class="panel hidden" id="panel-about">
+    <div class="panel-header">
+      <h1 class="panel-title">📝 Sobre Mim</h1>
+      <p class="panel-sub">Texto e destaques da seção "Sobre".</p>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="f-about-tag">Tag da Seção</label>
+        <input type="text" class="form-input" id="f-about-tag" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-about-title">Título da Seção</label>
+        <input type="text" class="form-input" id="f-about-title" />
+      </div>
+      <div class="form-group full">
+        <label class="form-label" for="f-about-text">Texto Principal</label>
+        <textarea class="form-input" id="f-about-text" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="panel-sub-title">Destaques (badges)</div>
+    <div id="highlights-list" class="list-container"></div>
+    <button class="btn-add" id="btn-add-highlight">+ Adicionar Destaque</button>
+  </section>
+
+  <!-- ── FORMAÇÃO ── -->
+  <section class="panel hidden" id="panel-education">
+    <div class="panel-header">
+      <h1 class="panel-title">🎓 Formação Acadêmica</h1>
+      <p class="panel-sub">Cursos, graduações e certificações.</p>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="f-education-tag">Tag da Seção</label>
+        <input type="text" class="form-input" id="f-education-tag" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-education-title">Título da Seção</label>
+        <input type="text" class="form-input" id="f-education-title" />
+      </div>
+    </div>
+    <div class="panel-sub-title">Formações</div>
+    <div id="education-list" class="list-container"></div>
+    <button class="btn-add" id="btn-add-edu">+ Adicionar Formação</button>
+  </section>
+
+  <!-- ── ATIVIDADES ── -->
+  <section class="panel hidden" id="panel-activities">
+    <div class="panel-header">
+      <h1 class="panel-title">📋 Atividades</h1>
+      <p class="panel-sub">Cards de responsabilidades e atividades profissionais.</p>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="f-activities-tag">Tag da Seção</label>
+        <input type="text" class="form-input" id="f-activities-tag" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-activities-title">Título da Seção</label>
+        <input type="text" class="form-input" id="f-activities-title" />
+      </div>
+    </div>
+    <div class="panel-sub-title">Cards de Atividades</div>
+    <div id="activities-list" class="list-container"></div>
+    <button class="btn-add" id="btn-add-activity">+ Adicionar Atividade</button>
+  </section>
+
+  <!-- ── CONTATO ── -->
+  <section class="panel hidden" id="panel-contact">
+    <div class="panel-header">
+      <h1 class="panel-title">✉️ Contato</h1>
+      <p class="panel-sub">Informações de contato e links sociais.</p>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="f-contact-tag">Tag da Seção</label>
+        <input type="text" class="form-input" id="f-contact-tag" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-contact-title">Título da Seção</label>
+        <input type="text" class="form-input" id="f-contact-title" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-contact-email">E-mail</label>
+        <input type="email" class="form-input" id="f-contact-email" placeholder="seuemail@exemplo.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-contact-whatsapp">WhatsApp (só números com DDI e DDD)</label>
+        <input type="text" class="form-input" id="f-contact-whatsapp" placeholder="5511999999999" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-contact-linkedin">LinkedIn (somente o usuário, sem URL)</label>
+        <input type="text" class="form-input" id="f-contact-linkedin" placeholder="daiane-rosana" />
+      </div>
+      <div class="form-group full">
+        <label class="form-label" for="f-contact-note">Nota de Disponibilidade</label>
+        <input type="text" class="form-input" id="f-contact-note" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEÇÕES ── -->
+  <section class="panel hidden" id="panel-sections">
+    <div class="panel-header">
+      <h1 class="panel-title">⚙️ Seções</h1>
+      <p class="panel-sub">Ativar ou desativar seções do portfólio.</p>
+    </div>
+    <div class="sections-toggles">
+      <div class="toggle-item">
+        <div class="toggle-info">
+          <div class="toggle-name">Sobre Mim</div>
+          <div class="toggle-sub">Seção com foto e texto introdutório</div>
+        </div>
+        <label class="toggle-switch" aria-label="Ativar seção Sobre Mim">
+          <input type="checkbox" id="t-about" />
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+      <div class="toggle-item">
+        <div class="toggle-info">
+          <div class="toggle-name">Formação Acadêmica</div>
+          <div class="toggle-sub">Cards de graduação e cursos</div>
+        </div>
+        <label class="toggle-switch" aria-label="Ativar seção Formação">
+          <input type="checkbox" id="t-education" />
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+      <div class="toggle-item">
+        <div class="toggle-info">
+          <div class="toggle-name">Atividades</div>
+          <div class="toggle-sub">Cards de responsabilidades profissionais</div>
+        </div>
+        <label class="toggle-switch" aria-label="Ativar seção Atividades">
+          <input type="checkbox" id="t-activities" />
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+      <div class="toggle-item">
+        <div class="toggle-info">
+          <div class="toggle-name">Contato</div>
+          <div class="toggle-sub">Links de e-mail, WhatsApp e LinkedIn</div>
+        </div>
+        <label class="toggle-switch" aria-label="Ativar seção Contato">
+          <input type="checkbox" id="t-contact" />
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── IMAGENS ── -->
+  <section class="panel hidden" id="panel-images">
+    <div class="panel-header">
+      <h1 class="panel-title">🖼️ Imagens</h1>
+      <p class="panel-sub">Alterar avatar, logo e outras imagens do portfólio.</p>
+    </div>
+    <div class="images-grid">
+      <div class="img-upload-card">
+        <div class="img-label">Foto de Perfil (Avatar)</div>
+        <div class="img-preview-wrap">
+          <img id="preview-avatar" src="assets/avatar.jpg" alt="Avatar" class="img-preview round" />
+        </div>
+        <label class="btn-upload" for="upload-avatar">📷 Escolher Imagem</label>
+        <input type="file" id="upload-avatar" accept="image/*" style="display:none" />
+        <div class="img-hint">Recomendado: quadrada, mínimo 300×300 px</div>
+      </div>
+      <div class="img-upload-card">
+        <div class="img-label">Logo (Navbar e Rodapé)</div>
+        <div class="img-preview-wrap">
+          <img id="preview-logo" src="assets/logo.jpg" alt="Logo" class="img-preview round" />
+        </div>
+        <label class="btn-upload" for="upload-logo">🖼️ Escolher Imagem</label>
+        <input type="file" id="upload-logo" accept="image/*" style="display:none" />
+        <div class="img-hint">Recomendado: quadrada, fundo transparente (PNG)</div>
+      </div>
+    </div>
+    <div class="info-box">
+      <b>Como funciona:</b> selecione uma imagem — ela será carregada e salva localmente no navegador. Para publicar em produção, substitua os arquivos <code>assets/avatar.jpg</code> e <code>assets/logo.jpg</code>.
+    </div>
+  </section>
+
+</main>
+
+<div class="toast-admin" id="toast-admin" role="status" aria-live="polite"></div>
+
+<script src="data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
