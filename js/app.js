@@ -30,9 +30,10 @@ function applyRemoteData(p) {
   ["meta","identity","theme","nav","sections","contact","footer"].forEach(function (k) {
     if (p[k]) Object.assign(PORTFOLIO_DATA[k], p[k]);
   });
-  if (p.highlights) PORTFOLIO_DATA.highlights = p.highlights;
-  if (p.education)  PORTFOLIO_DATA.education  = p.education;
-  if (p.activities) PORTFOLIO_DATA.activities = p.activities;
+  // Só sobrescreve arrays se o dado remoto tiver itens (evita apagar cards por salvamento acidental vazio)
+  if (p.highlights && p.highlights.length > 0) PORTFOLIO_DATA.highlights = p.highlights;
+  if (p.education  && p.education.length  > 0) PORTFOLIO_DATA.education  = p.education;
+  if (p.activities && p.activities.length > 0) PORTFOLIO_DATA.activities = p.activities;
 }
 
 // ════════════════════════════════
