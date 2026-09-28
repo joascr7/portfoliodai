@@ -74,8 +74,11 @@ async function loadFromSupabase(forceRefresh) {
 async function saveToSupabase(portfolioData) {
   var client = getSupabaseClient();
   if (!client) {
-    throw new Error("Chave do Supabase (anon key) não configurada.");
+    console.error("[Supabase] Cliente não disponível. Verifique a chave anon.");
+    throw new Error("Cliente Supabase não disponível. Verifique a chave anon.");
   }
+
+  console.log("[Supabase] Iniciando upsert...");
 
   var response = await client
     .from("portfolio_config")
@@ -83,15 +86,29 @@ async function saveToSupabase(portfolioData) {
       id: "daiane",
       data: portfolioData,
       updated_at: new Date().toISOString()
-    });
+    }, { onConflict: "id" });
 
   if (response.error) {
-    throw new Error(response.error.message);
+    console.error("[Supabase] Erro no upsert:", response.error);
+    throw new Error(response.error.message + (response.error.hint ? " | " + response.error.hint : ""));
   }
 
-  // Invalida cache local
+  console.log("[Supabase] Dados salvos com sucesso!", response);
+
+  // Invalida cache local para forçar releitura na próxima visita
   sessionStorage.removeItem("portfolio_supabase_cache_time");
   return true;
+}
+
+// ── Diagnóstico: verificar se o dado foi salvo no Supabase ──
+async function checkSupabaseData() {
+  var client = getSupabaseClient();
+  if (!client) { console.warn("[Diagnóstico] Cliente não disponível."); return null; }
+  var res = await client.from("portfolio_config").select("updated_at, data").eq("id", "daiane").maybeSingle();
+  if (res.error) { console.error("[Diagnóstico] Erro:", res.error); return null; }
+  console.log("[Diagnóstico] Dado no Supabase — atualizado em:", res.data && res.data.updated_at);
+  console.log("[Diagnóstico] Conteúdo:", res.data && res.data.data);
+  return res.data;
 }
 
 if (typeof window !== "undefined") {
@@ -99,4 +116,5 @@ if (typeof window !== "undefined") {
   window.getSupabaseClient = getSupabaseClient;
   window.loadFromSupabase = loadFromSupabase;
   window.saveToSupabase = saveToSupabase;
+  window.checkSupabaseData = checkSupabaseData;
 }
