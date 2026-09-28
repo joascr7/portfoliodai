@@ -3,15 +3,17 @@
 //  Renderização do portfólio a partir do PORTFOLIO_DATA
 // ═══════════════════════════════════════════════
 
-document.addEventListener("DOMContentLoaded", function () {
-  renderPortfolio();
-  initPetals();
-  initNavbar();
-  initHamburger();
-  requestAnimationFrame(function () {
-    requestAnimationFrame(initScrollReveal);
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", function () {
+    renderPortfolio();
+    initPetals();
+    initNavbar();
+    initHamburger();
+    requestAnimationFrame(function () {
+      requestAnimationFrame(initScrollReveal);
+    });
   });
-});
+}
 
 // ════════════════════════════════
 //  RENDERIZAÇÃO PRINCIPAL

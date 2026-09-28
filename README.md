@@ -21,12 +21,13 @@ Portfólio moderno, sofisticado e feminino com paleta Bordô / Vinho Escuro e Ou
 ```
 ├── index.html        # Página principal pública do portfólio
 ├── style.css         # Estilos, variáveis de tema e animações
-├── data.js           # Fonte de dados central e persistência local
-├── app.js            # Lógica de renderização dinâmica e interações
-├── admin.html        # Painel administrativo
+├── admin.html        # Painel administrativo protegido por senha
 ├── admin.css         # Estilos do painel de controle
-├── admin.js          # Lógica de edição, upload e customização de cores
-├── server.js         # Servidor local Node.js (opcional)
+├── vercel.json       # Configuração para deploy estático no Vercel
+├── js/
+│   ├── data.js       # Fonte de dados central e persistência local
+│   ├── app.js        # Lógica de renderização dinâmica e interações
+│   └── admin.js      # Lógica de autenticação e edição
 └── assets/
     ├── avatar.jpg    # Foto profissional
     └── logo.jpg      # Monograma DR em ouro rosé

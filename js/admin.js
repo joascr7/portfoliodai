@@ -4,21 +4,23 @@
 //  Com suporte a TODAS as cores ajustáveis
 // ═══════════════════════════════════════════════
 
-document.addEventListener("DOMContentLoaded", function () {
-  initAuth();
-  initSidebar();
-  loadFormValues();
-  initColorPickers();
-  initHighlightsList();
-  initEducationList();
-  initActivitiesList();
-  initSectionToggles();
-  initImageUploads();
-  initSaveButton();
-  initResetButton();
-  initLogoutButton();
-  initChangePassword();
-});
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", function () {
+    initAuth();
+    initSidebar();
+    loadFormValues();
+    initColorPickers();
+    initHighlightsList();
+    initEducationList();
+    initActivitiesList();
+    initSectionToggles();
+    initImageUploads();
+    initSaveButton();
+    initResetButton();
+    initLogoutButton();
+    initChangePassword();
+  });
+}
 
 // ════════════════════════════════
 //  SIDEBAR
