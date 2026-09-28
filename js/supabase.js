@@ -36,7 +36,10 @@ function getSupabaseClient() {
 // ── Carregar do Supabase com Cache ──
 async function loadFromSupabase(forceRefresh) {
   var client = getSupabaseClient();
-  if (!client) return null;
+  if (!client) {
+    console.warn("[Supabase] getSupabaseClient() retornou null — biblioteca carregada?", typeof window.supabase);
+    return null;
+  }
 
   // Cache de 5 minutos no sessionStorage para evitar requisições a cada F5 do mesmo usuário
   var cacheKey = "portfolio_supabase_cache_time";
@@ -44,9 +47,11 @@ async function loadFromSupabase(forceRefresh) {
   var now = Date.now();
 
   if (!forceRefresh && lastFetch && (now - parseInt(lastFetch, 10)) < 300000) {
-    // Menos de 5 minutos da última busca, usa o cache local
+    console.log("[Supabase] Cache válido — usando dados locais. Próxima busca em", Math.round((300000 - (now - parseInt(lastFetch, 10))) / 1000) + "s");
     return null;
   }
+
+  console.log("[Supabase] Buscando dados do banco...");
 
   try {
     var response = await client
@@ -56,14 +61,17 @@ async function loadFromSupabase(forceRefresh) {
       .maybeSingle();
 
     if (response.error) {
-      console.warn("[Supabase] Aviso ao buscar dados:", response.error.message);
+      console.warn("[Supabase] Erro ao buscar dados:", response.error.message, response.error);
       return null;
     }
 
     if (response.data && response.data.data && typeof response.data.data === "object") {
+      console.log("[Supabase] ✅ Dados carregados do banco com sucesso!");
       sessionStorage.setItem(cacheKey, String(now));
       return response.data.data;
     }
+
+    console.warn("[Supabase] Resposta vazia ou inesperada:", response.data);
   } catch (err) {
     console.warn("[Supabase] Erro de rede:", err);
   }
