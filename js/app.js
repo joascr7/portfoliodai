@@ -19,6 +19,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
         if (remoteData && typeof remoteData === "object") {
           applyRemoteData(remoteData);
           renderPortfolio();
+          requestAnimationFrame(initScrollReveal);
         }
       }).catch(function () {});
     }
@@ -72,7 +73,7 @@ function renderPortfolio() {
   var hl = document.getElementById("about-highlights");
   if (hl) {
     hl.innerHTML = D.highlights.map(function (h) {
-      return '<div class="highlight-item reveal"><span class="highlight-icon">' + h.icon + '</span><span class="highlight-label">' + h.label + '</span></div>';
+      return '<div class="highlight-item"><span class="highlight-icon">' + h.icon + '</span><span class="highlight-label">' + h.label + '</span></div>';
     }).join("");
   }
 
@@ -94,13 +95,13 @@ function renderPortfolio() {
   }
 
   // Atividades
-  toggleSection("activities", D.sections.activities.enabled !== false);
+  toggleSection("activities", !D.sections || !D.sections.activities || D.sections.activities.enabled !== false);
   setText("activities-tag", D.sections.activities.tag);
   setText("activities-title", D.sections.activities.title);
   var grid = document.getElementById("activities-grid");
   if (grid) {
     grid.innerHTML = D.activities.map(function (a, i) {
-      return '<div class="activity-card reveal" id="activity-' + i + '">' +
+      return '<div class="activity-card" id="activity-' + i + '">' +
         '<span class="activity-icon">' + a.icon + '</span>' +
         '<h3 class="activity-title">' + a.title + '</h3>' +
         '<p class="activity-desc">' + a.desc + '</p></div>';
@@ -247,9 +248,9 @@ function initHamburger() {
 //  SCROLL REVEAL
 // ════════════════════════════════
 function initScrollReveal() {
-  var targets = document.querySelectorAll(".reveal");
+  var targets = document.querySelectorAll(".reveal:not(.visible)");
   if (!("IntersectionObserver" in window)) {
-    targets.forEach(function (el) { el.classList.add("visible"); });
+    document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("visible"); });
     return;
   }
   var observer = new IntersectionObserver(function (entries) {
