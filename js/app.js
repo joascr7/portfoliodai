@@ -93,7 +93,7 @@ function renderPortfolio() {
   }
 
   // Atividades
-  toggleSection("activities", D.sections.activities.enabled);
+  toggleSection("activities", D.sections.activities.enabled !== false);
   setText("activities-tag", D.sections.activities.tag);
   setText("activities-title", D.sections.activities.title);
   var grid = document.getElementById("activities-grid");
