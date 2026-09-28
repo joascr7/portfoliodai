@@ -12,7 +12,27 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
     requestAnimationFrame(function () {
       requestAnimationFrame(initScrollReveal);
     });
+
+    // Sincronização sob demanda com Supabase (com cache)
+    if (typeof loadFromSupabase === "function") {
+      loadFromSupabase().then(function (remoteData) {
+        if (remoteData && typeof remoteData === "object") {
+          applyRemoteData(remoteData);
+          renderPortfolio();
+        }
+      }).catch(function () {});
+    }
   });
+}
+
+function applyRemoteData(p) {
+  if (!p) return;
+  ["meta","identity","theme","nav","sections","contact","footer"].forEach(function (k) {
+    if (p[k]) Object.assign(PORTFOLIO_DATA[k], p[k]);
+  });
+  if (p.highlights) PORTFOLIO_DATA.highlights = p.highlights;
+  if (p.education)  PORTFOLIO_DATA.education  = p.education;
+  if (p.activities) PORTFOLIO_DATA.activities = p.activities;
 }
 
 // ════════════════════════════════

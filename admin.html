@@ -45,6 +45,9 @@
     <button class="sidebar-btn" data-panel="security">
       <span class="s-icon">🔒</span> Segurança
     </button>
+    <button class="sidebar-btn" data-panel="database">
+      <span class="s-icon">⚡</span> Supabase
+    </button>
   </nav>
   <div class="sidebar-footer">
     <button class="btn-save" id="btn-save-all">💾 Salvar Tudo</button>
@@ -400,6 +403,35 @@
     </div>
   </section>
 
+  <!-- ── BANCO SUPABASE ── -->
+  <section class="panel hidden" id="panel-database">
+    <div class="panel-header">
+      <h1 class="panel-title">⚡ Conexão ao Supabase</h1>
+      <p class="panel-sub">Sincronize o portfólio diretamente com seu banco de dados na nuvem.</p>
+    </div>
+    <div class="form-grid" style="max-width: 650px;">
+      <div class="form-group full">
+        <label class="form-label" for="f-supabase-url">URL do Projeto Supabase</label>
+        <input type="text" class="form-input" id="f-supabase-url" value="https://hiajsyehskhqylvpynxn.supabase.co" />
+      </div>
+      <div class="form-group full">
+        <label class="form-label" for="f-supabase-key">Chave Pública (anon / public key)</label>
+        <input type="password" class="form-input" id="f-supabase-key" placeholder="Cole sua chave anon (eyJ...)" autocomplete="off" />
+      </div>
+      <div class="form-group full" style="display:flex;gap:1rem;align-items:center;margin-top:0.5rem">
+        <button type="button" class="btn-save" id="btn-save-supabase" style="flex:1">💾 Salvar Chave & Testar</button>
+        <span id="supabase-status-badge" style="font-size:0.85rem;color:var(--text-muted)">⚪ Não testado</span>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:1.8rem">
+      <b>Como configurar o banco em 1 minuto:</b><br />
+      1. No painel do seu projeto Supabase, clique em <b>SQL Editor</b>.<br />
+      2. Abra e cole o script do arquivo <code>supabase_setup.sql</code> que criamos no seu repositório e clique em <b>Run</b>.<br />
+      3. Vá em <b>Project Settings</b> > <b>API</b>, copie a chave <b>anon (public)</b> e cole no campo acima.<br />
+      4. Clique em <b>Salvar Chave & Testar</b>. A partir daí, qualquer clique em "Salvar Tudo" atualizará o banco instantaneamente e o portfólio público consumirá os dados da nuvem com cache inteligente sem estourar o plano gratuito!
+    </div>
+  </section>
+
 </main>
 
 <div class="toast-admin" id="toast-admin" role="status" aria-live="polite"></div>
@@ -423,6 +455,8 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
 <script src="js/data.js"></script>
 <script src="js/admin.js"></script>
 </body>

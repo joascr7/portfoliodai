@@ -19,6 +19,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
     initResetButton();
     initLogoutButton();
     initChangePassword();
+    initSupabasePanel();
   });
 }
 
@@ -367,7 +368,18 @@ function saveAll() {
   // Salvar no localStorage
   try {
     localStorage.setItem("portfolio_data_v2", JSON.stringify(D));
-    showToastAdmin("✅ Alterações salvas com sucesso!", "success");
+    
+    // Sincronizar com Supabase se a chave estiver configurada
+    var hasKey = localStorage.getItem("supabase_anon_key") || (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.anonKey);
+    if (typeof saveToSupabase === "function" && hasKey) {
+      saveToSupabase(D).then(function () {
+        showToastAdmin("✅ Salvo localmente e no Supabase!", "success");
+      }).catch(function (err) {
+        showToastAdmin("Salvo localmente! (Supabase: " + err.message + ")", "info");
+      });
+    } else {
+      showToastAdmin("✅ Alterações salvas com sucesso!", "success");
+    }
   } catch (e) {
     showToastAdmin("❌ Erro ao salvar: " + e.message, "error");
   }
@@ -530,4 +542,59 @@ function initChangePassword() {
 
     showToastAdmin("🔑 Senha alterada com sucesso!", "success");
   });
+}
+
+// ════════════════════════════════
+//  PAINEL SUPABASE
+// ════════════════════════════════
+function initSupabasePanel() {
+  var urlInput = document.getElementById("f-supabase-url");
+  var keyInput = document.getElementById("f-supabase-key");
+  var badge    = document.getElementById("supabase-status-badge");
+  var btn      = document.getElementById("btn-save-supabase");
+
+  if (!urlInput || !keyInput || !btn) return;
+
+  var savedKey = localStorage.getItem("supabase_anon_key") || "";
+  keyInput.value = savedKey;
+
+  if (savedKey) {
+    testSupabaseConnection(savedKey);
+  }
+
+  btn.addEventListener("click", function () {
+    var key = keyInput.value.trim();
+    if (!key) {
+      localStorage.removeItem("supabase_anon_key");
+      if (badge) { badge.textContent = "⚪ Modo Local (Sem Nuvem)"; badge.style.color = "var(--text-muted)"; }
+      showToastAdmin("Chave removida. Usando armazenamento local.", "info");
+      return;
+    }
+    localStorage.setItem("supabase_anon_key", key);
+    if (window.SUPABASE_CONFIG) window.SUPABASE_CONFIG.anonKey = key;
+    _supabaseClient = null;
+    testSupabaseConnection(key);
+  });
+
+  async function testSupabaseConnection(key) {
+    if (badge) { badge.textContent = "🟡 Testando..."; badge.style.color = "var(--rose)"; }
+    try {
+      if (typeof getSupabaseClient !== "function") return;
+      var client = getSupabaseClient();
+      if (!client) {
+        if (badge) { badge.textContent = "🔴 Biblioteca não carregada"; badge.style.color = "var(--error)"; }
+        return;
+      }
+      var res = await client.from("portfolio_config").select("id").limit(1);
+      if (res.error) {
+        if (badge) { badge.textContent = "🔴 " + res.error.message; badge.style.color = "#ff6b8b"; }
+        showToastAdmin("Erro Supabase: " + res.error.message, "error");
+      } else {
+        if (badge) { badge.textContent = "🟢 Conectado ao Supabase!"; badge.style.color = "#2ecc71"; }
+        showToastAdmin("🟢 Conexão com Supabase confirmada!", "success");
+      }
+    } catch (e) {
+      if (badge) { badge.textContent = "🔴 Falha de conexão"; badge.style.color = "#ff6b8b"; }
+    }
+  }
 }
