@@ -15,12 +15,12 @@ var _supabaseClient = null;
 
 function getSupabaseClient() {
   if (_supabaseClient) return _supabaseClient;
-  
+
   var key = SUPABASE_CONFIG.anonKey || localStorage.getItem("supabase_anon_key");
   if (!key || !SUPABASE_CONFIG.url || typeof window.supabase === "undefined") {
     return null;
   }
-  
+
   try {
     _supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, key, {
       auth: { persistSession: false },
@@ -42,7 +42,7 @@ async function loadFromSupabase(forceRefresh) {
   var cacheKey = "portfolio_supabase_cache_time";
   var lastFetch = sessionStorage.getItem(cacheKey);
   var now = Date.now();
-  
+
   if (!forceRefresh && lastFetch && (now - parseInt(lastFetch, 10)) < 300000) {
     // Menos de 5 minutos da última busca, usa o cache local
     return null;
