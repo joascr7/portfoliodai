@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -42,11 +42,15 @@
     <button class="sidebar-btn" data-panel="images">
       <span class="s-icon">🖼️</span> Imagens
     </button>
+    <button class="sidebar-btn" data-panel="security">
+      <span class="s-icon">🔒</span> Segurança
+    </button>
   </nav>
   <div class="sidebar-footer">
     <button class="btn-save" id="btn-save-all">💾 Salvar Tudo</button>
     <a href="index.html" class="btn-preview" target="_blank" rel="noopener">👁 Ver Portfólio</a>
     <button class="btn-reset" id="btn-reset">↩ Restaurar Padrão</button>
+    <button class="btn-logout" id="btn-logout">🔒 Bloquear / Sair</button>
   </div>
 </aside>
 
@@ -368,9 +372,56 @@
     </div>
   </section>
 
+  <!-- ── SEGURANÇA ── -->
+  <section class="panel hidden" id="panel-security">
+    <div class="panel-header">
+      <h1 class="panel-title">🔒 Segurança do Painel</h1>
+      <p class="panel-sub">Altere a senha mestra para proteger o acesso administrativo.</p>
+    </div>
+    <div class="form-grid" style="max-width: 520px;">
+      <div class="form-group full">
+        <label class="form-label" for="f-curr-pass">Senha Atual</label>
+        <input type="password" class="form-input" id="f-curr-pass" placeholder="Digite a senha atual" autocomplete="current-password" />
+      </div>
+      <div class="form-group full">
+        <label class="form-label" for="f-new-pass">Nova Senha</label>
+        <input type="password" class="form-input" id="f-new-pass" placeholder="Mínimo 6 caracteres" autocomplete="new-password" />
+      </div>
+      <div class="form-group full">
+        <label class="form-label" for="f-confirm-pass">Confirmar Nova Senha</label>
+        <input type="password" class="form-input" id="f-confirm-pass" placeholder="Repita a nova senha" autocomplete="new-password" />
+      </div>
+      <div class="form-group full">
+        <button type="button" class="btn-save" id="btn-change-password" style="width:100%;margin-top:0.5rem">🔑 Atualizar Senha</button>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:1.5rem">
+      <b>Informações de Segurança:</b> A senha padrão inicial é <code>daiane2026</code>. As senhas são protegidas por hash criptográfico seguro (SHA-256) gerado diretamente no navegador. Ao fechar a aba ou navegador, a sessão é automaticamente bloqueada.
+    </div>
+  </section>
+
 </main>
 
 <div class="toast-admin" id="toast-admin" role="status" aria-live="polite"></div>
+
+<!-- AUTH OVERLAY / TELA DE BLOQUEIO -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-card">
+    <img src="assets/logo.jpg" alt="Logo" class="auth-logo" />
+    <h2 class="auth-title">Acesso Restrito</h2>
+    <p class="auth-sub">Digite a senha de administrador para gerenciar o portfólio.</p>
+    <form class="auth-form" id="auth-form" onsubmit="return false;">
+      <div class="auth-input-wrap">
+        <input type="password" class="auth-input" id="auth-password" placeholder="Senha do Administrador" autofocus autocomplete="current-password" />
+      </div>
+      <div class="auth-error" id="auth-error"></div>
+      <button type="submit" class="auth-btn" id="auth-submit-btn">🔓 Entrar no Painel</button>
+      <div style="text-align: center;">
+        <a href="index.html" class="auth-back">← Voltar ao Portfólio Público</a>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script src="data.js"></script>
 <script src="admin.js"></script>

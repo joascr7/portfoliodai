@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    ADMIN PANEL CSS — Daiane Rosana Portfólio
    Paleta Bordô + Rosé
 ═══════════════════════════════════════════════ */
@@ -293,6 +293,102 @@ select.form-input option { background: #2d1020; color: var(--text-main); }
 .toast-admin.show  { transform: translateY(0); opacity: 1; }
 .toast-admin.error   { border-left-color: var(--error); }
 .toast-admin.success { border-left-color: var(--success); }
+
+/* ═══ AUTH OVERLAY ═══ */
+.auth-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(13, 6, 12, 0.92);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem; transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.auth-overlay.hidden {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+.auth-card {
+  width: 100%; max-width: 420px;
+  background: linear-gradient(145deg, rgba(45, 16, 32, 0.96), rgba(21, 8, 16, 0.99));
+  border: 1px solid var(--rose-border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2.2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 35px rgba(196, 134, 154, 0.18);
+  text-align: center; position: relative; overflow: hidden;
+}
+.auth-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--rose), var(--rose-light), var(--rose));
+}
+.auth-logo {
+  width: 68px; height: 68px; border-radius: 50%;
+  border: 2px solid var(--rose); object-fit: cover;
+  margin: 0 auto 1.2rem; display: block;
+  box-shadow: 0 0 20px rgba(196, 134, 154, 0.35);
+}
+.auth-title {
+  font-size: 1.4rem; font-weight: 700; color: var(--white);
+  margin-bottom: 0.35rem; letter-spacing: -0.01em;
+}
+.auth-sub {
+  font-size: 0.88rem; color: var(--text-muted);
+  margin-bottom: 1.6rem; line-height: 1.5;
+}
+.auth-form {
+  display: flex; flex-direction: column; gap: 0.9rem; text-align: left;
+}
+.auth-input-wrap {
+  position: relative;
+}
+.auth-input {
+  width: 100%; padding: 0.85rem 1.1rem;
+  background: rgba(13, 6, 12, 0.8);
+  border: 1px solid var(--rose-border);
+  border-radius: var(--radius-sm);
+  color: var(--white); font-size: 0.95rem; font-family: var(--font-body);
+  outline: none; transition: var(--transition);
+}
+.auth-input:focus {
+  border-color: var(--rose);
+  box-shadow: 0 0 0 3px rgba(196, 134, 154, 0.2);
+}
+.auth-btn {
+  padding: 0.85rem 1.5rem;
+  background: linear-gradient(135deg, var(--rose), #a85870);
+  border: none; border-radius: var(--radius-sm);
+  color: #fff; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  box-shadow: 0 4px 18px rgba(196, 134, 154, 0.3);
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.auth-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(196, 134, 154, 0.45);
+}
+.auth-error {
+  font-size: 0.82rem; color: #ff6b8b;
+  min-height: 1.2rem; text-align: center;
+  transition: var(--transition);
+}
+.auth-back {
+  margin-top: 1rem; display: inline-block;
+  font-size: 0.82rem; color: var(--text-muted);
+  text-decoration: none; transition: var(--transition);
+}
+.auth-back:hover { color: var(--rose-light); }
+
+.btn-logout {
+  width: 100%; padding: 0.55rem 0.8rem;
+  background: rgba(220, 53, 69, 0.12);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: var(--radius-sm);
+  color: #ff8595; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  margin-top: 0.4rem;
+}
+.btn-logout:hover {
+  background: rgba(220, 53, 69, 0.25);
+  color: #ffa5b2;
+}
 
 /* ═══ RESPONSIVO ═══ */
 @media (max-width: 768px) {

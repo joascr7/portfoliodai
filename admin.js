@@ -1,10 +1,11 @@
-﻿// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 //  DAIANE ROSANA — ADMIN.JS
 //  Painel completo de edição do portfólio
 //  Com suporte a TODAS as cores ajustáveis
 // ═══════════════════════════════════════════════
 
 document.addEventListener("DOMContentLoaded", function () {
+  initAuth();
   initSidebar();
   loadFormValues();
   initColorPickers();
@@ -15,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
   initImageUploads();
   initSaveButton();
   initResetButton();
+  initLogoutButton();
+  initChangePassword();
 });
 
 // ════════════════════════════════
@@ -398,4 +401,131 @@ function showToastAdmin(msg, type) {
   t.textContent = msg;
   t.className = "toast-admin show " + type;
   setTimeout(function () { t.classList.remove("show"); }, 3500);
+}
+
+// ════════════════════════════════
+//  AUTENTICAÇÃO & SEGURANÇA
+// ════════════════════════════════
+var DEFAULT_PASS_HASH = "876df126fa559f3a922b78b78f2c703201f724002ee25f752ed1a0cdcbe92a28"; // daiane2026
+
+async function sha256(text) {
+  try {
+    var enc = new TextEncoder().encode(text);
+    var buf = await crypto.subtle.digest("SHA-256", enc);
+    var arr = Array.from(new Uint8Array(buf));
+    return arr.map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+  } catch (e) {
+    var hash = 0;
+    for (var i = 0; i < text.length; i++) {
+      hash = ((hash << 5) - hash) + text.charCodeAt(i);
+      hash |= 0;
+    }
+    return String(hash);
+  }
+}
+
+function getStoredPassHash() {
+  return localStorage.getItem("admin_password_hash") || DEFAULT_PASS_HASH;
+}
+
+function initAuth() {
+  var overlay = document.getElementById("auth-overlay");
+  var form    = document.getElementById("auth-form");
+  var input   = document.getElementById("auth-password");
+  var errEl   = document.getElementById("auth-error");
+
+  if (!overlay) return;
+
+  var isAuth = sessionStorage.getItem("admin_authenticated") === "true";
+  if (isAuth) {
+    overlay.classList.add("hidden");
+  } else {
+    overlay.classList.remove("hidden");
+    if (input) setTimeout(function () { input.focus(); }, 150);
+  }
+
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var pass = input.value.trim();
+      if (!pass) {
+        showAuthError("Digite sua senha de acesso.");
+        return;
+      }
+      var hashed = await sha256(pass);
+      var currentHash = getStoredPassHash();
+
+      if (hashed === currentHash) {
+        sessionStorage.setItem("admin_authenticated", "true");
+        overlay.classList.add("hidden");
+        if (errEl) errEl.textContent = "";
+        input.value = "";
+        showToastAdmin("🔓 Acesso liberado! Bem-vinda.", "success");
+      } else {
+        showAuthError("Senha incorreta. Verifique e tente novamente.");
+        input.select();
+      }
+    });
+  }
+
+  function showAuthError(msg) {
+    if (errEl) errEl.textContent = msg;
+    input.style.borderColor = "#ff4d6d";
+    setTimeout(function () { input.style.borderColor = ""; }, 1600);
+  }
+}
+
+function initLogoutButton() {
+  var btn = document.getElementById("btn-logout");
+  if (!btn) return;
+  btn.addEventListener("click", function () {
+    sessionStorage.removeItem("admin_authenticated");
+    var overlay = document.getElementById("auth-overlay");
+    if (overlay) overlay.classList.remove("hidden");
+    var input = document.getElementById("auth-password");
+    if (input) {
+      input.value = "";
+      input.focus();
+    }
+    showToastAdmin("🔒 Painel bloqueado.", "info");
+  });
+}
+
+function initChangePassword() {
+  var btn = document.getElementById("btn-change-password");
+  if (!btn) return;
+  btn.addEventListener("click", async function () {
+    var curr    = getVal("f-curr-pass").trim();
+    var newP    = getVal("f-new-pass").trim();
+    var confirm = getVal("f-confirm-pass").trim();
+
+    if (!curr) {
+      showToastAdmin("Informe a senha atual.", "error");
+      return;
+    }
+    var hashedCurr = await sha256(curr);
+    var currentStored = getStoredPassHash();
+
+    if (hashedCurr !== currentStored) {
+      showToastAdmin("A senha atual digitada está incorreta.", "error");
+      return;
+    }
+    if (newP.length < 6) {
+      showToastAdmin("A nova senha deve ter pelo menos 6 caracteres.", "error");
+      return;
+    }
+    if (newP !== confirm) {
+      showToastAdmin("A confirmação da senha não coincide.", "error");
+      return;
+    }
+
+    var hashedNew = await sha256(newP);
+    localStorage.setItem("admin_password_hash", hashedNew);
+
+    setVal("f-curr-pass", "");
+    setVal("f-new-pass", "");
+    setVal("f-confirm-pass", "");
+
+    showToastAdmin("🔑 Senha alterada com sucesso!", "success");
+  });
 }
