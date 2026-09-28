@@ -93,7 +93,21 @@ async function saveToSupabase(portfolioData) {
     throw new Error(response.error.message + (response.error.hint ? " | " + response.error.hint : ""));
   }
 
-  console.log("[Supabase] Dados salvos com sucesso!", response);
+  console.log("[Supabase] Upsert retornou status 200. Verificando se escreveu...");
+
+  // Leitura de confirmação — garante que o dado realmente está no banco
+  var check = await client
+    .from("portfolio_config")
+    .select("updated_at")
+    .eq("id", "daiane")
+    .maybeSingle();
+
+  if (check.error || !check.data) {
+    console.error("[Supabase] ⚠️ Upsert retornou 200 mas dado NÃO está no banco!", check.error);
+    throw new Error("Dado não encontrado no banco após salvar. Verifique as políticas RLS do Supabase.");
+  }
+
+  console.log("[Supabase] ✅ Confirmado no banco! Atualizado em:", check.data.updated_at);
 
   // Invalida cache local para forçar releitura na próxima visita
   sessionStorage.removeItem("portfolio_supabase_cache_time");
