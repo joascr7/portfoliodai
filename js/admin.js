@@ -305,10 +305,36 @@ function setupImageUpload(inputId, previewId, onLoad) {
   input.addEventListener("change", function () {
     var file = input.files[0];
     if (!file) return;
+
     var reader = new FileReader();
     reader.onload = function (e) {
-      preview.src = e.target.result;
-      onLoad(e.target.result);
+      var img = new Image();
+      img.onload = function () {
+        // Redimensiona para no máximo 350x350 mantendo proporção (avatar/logo ultraleve)
+        var maxDim = 350;
+        var w = img.width;
+        var h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        var canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+
+        // Qualidade 0.72 em JPEG gera arquivos de apenas ~10-20 KB
+        var compressedDataUrl = canvas.toDataURL("image/jpeg", 0.72);
+        preview.src = compressedDataUrl;
+        onLoad(compressedDataUrl);
+      };
+      img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   });

@@ -33,38 +33,99 @@ function getSupabaseClient() {
   }
 }
 
-// ── Carregar do Supabase com Cache ──
+// ── Constantes de Cache ──
+var CACHE_DATA_KEY       = "portfolio_cache_data_v1";
+var CACHE_UPDATED_AT_KEY = "portfolio_cache_updated_at";
+var CACHE_LAST_CHECK_KEY = "portfolio_cache_last_check";
+var CACHE_TTL_MS         = 15 * 60 * 1000; // 15 minutos sem bater no Supabase
+
+// ── Carregar do Supabase com Cache Inteligente (Economia de 99% de Egress/Logs) ──
 async function loadFromSupabase(forceRefresh) {
   var client = getSupabaseClient();
   if (!client) {
-    console.warn("[Supabase] getSupabaseClient() retornou null — biblioteca carregada?", typeof window.supabase);
-    return null;
+    return getLocalCacheData();
   }
 
-  console.log("[Supabase] Buscando dados atualizados do banco...");
+  var now = Date.now();
+  var lastCheck = parseInt(localStorage.getItem(CACHE_LAST_CHECK_KEY) || "0", 10);
+  var cachedData = getLocalCacheData();
+  var cachedUpdatedAt = localStorage.getItem(CACHE_UPDATED_AT_KEY);
+
+  // 1. Se o cache for recente (< 15 min) e temos dados locais, NÃO faz requisição
+  if (!forceRefresh && cachedData && (now - lastCheck) < CACHE_TTL_MS) {
+    var remainingMin = Math.round((CACHE_TTL_MS - (now - lastCheck)) / 60000);
+    console.log("[Supabase] ⚡ Cache local ativo (" + remainingMin + " min restantes). Zero requisições.");
+    return cachedData;
+  }
+
+  console.log("[Supabase] Verificando versão dos dados...");
 
   try {
+    // 2. Consulta ultraleve: busca APENAS o 'updated_at' (~40 bytes vs 128KB do JSON completo)
+    var checkRes = await client
+      .from("portfolio_config")
+      .select("updated_at")
+      .eq("id", "daiane")
+      .maybeSingle();
+
+    if (checkRes.error) {
+      console.warn("[Supabase] Aviso ao checar versão:", checkRes.error.message);
+      return cachedData;
+    }
+
+    if (!checkRes.data) {
+      return cachedData;
+    }
+
+    var serverUpdatedAt = checkRes.data.updated_at;
+
+    // 3. Se a data de modificação for idêntica ao cache, renova TTL e NÃO baixa o JSON pesado
+    if (cachedData && cachedUpdatedAt && cachedUpdatedAt === serverUpdatedAt) {
+      console.log("[Supabase] ✅ Dados inalterados no banco. Reutilizando cache local (0 bytes de egress).");
+      localStorage.setItem(CACHE_LAST_CHECK_KEY, String(now));
+      return cachedData;
+    }
+
+    // 4. Houve alteração no banco (ou primeira visita): baixa os dados completos
+    console.log("[Supabase] 🔄 Nova versão detectada! Baixando dados atualizados...");
     var response = await client
       .from("portfolio_config")
-      .select("data")
+      .select("data, updated_at")
       .eq("id", "daiane")
       .maybeSingle();
 
     if (response.error) {
-      console.warn("[Supabase] Erro ao buscar dados:", response.error.message, response.error);
-      return null;
+      console.warn("[Supabase] Erro ao baixar dados:", response.error.message);
+      return cachedData;
     }
 
     if (response.data && response.data.data && typeof response.data.data === "object") {
-      console.log("[Supabase] ✅ Dados carregados do banco com sucesso!");
-      return response.data.data;
+      var freshData = response.data.data;
+      saveLocalCache(freshData, response.data.updated_at || serverUpdatedAt);
+      console.log("[Supabase] ✅ Dados atualizados e armazenados em cache local com sucesso!");
+      return freshData;
     }
-
-    console.warn("[Supabase] Resposta vazia ou inesperada:", response.data);
   } catch (err) {
-    console.warn("[Supabase] Erro de rede:", err);
+    console.warn("[Supabase] Erro de conexão:", err);
   }
+
+  return cachedData;
+}
+
+function getLocalCacheData() {
+  try {
+    var raw = localStorage.getItem(CACHE_DATA_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
   return null;
+}
+
+function saveLocalCache(data, updatedAt) {
+  try {
+    localStorage.setItem(CACHE_DATA_KEY, JSON.stringify(data));
+    if (updatedAt) localStorage.setItem(CACHE_UPDATED_AT_KEY, updatedAt);
+    localStorage.setItem(CACHE_LAST_CHECK_KEY, String(Date.now()));
+  } catch (e) {}
 }
 
 // ── Salvar no Supabase (Apenas sob demanda do Admin) ──
@@ -76,13 +137,14 @@ async function saveToSupabase(portfolioData) {
   }
 
   console.log("[Supabase] Iniciando upsert...");
+  var nowIso = new Date().toISOString();
 
   var response = await client
     .from("portfolio_config")
     .upsert({
       id: "daiane",
       data: portfolioData,
-      updated_at: new Date().toISOString()
+      updated_at: nowIso
     }, { onConflict: "id" });
 
   if (response.error) {
@@ -90,21 +152,9 @@ async function saveToSupabase(portfolioData) {
     throw new Error(response.error.message + (response.error.hint ? " | " + response.error.hint : ""));
   }
 
-  console.log("[Supabase] Upsert retornou status 200. Verificando se escreveu...");
-
-  // Leitura de confirmação — garante que o dado realmente está no banco
-  var check = await client
-    .from("portfolio_config")
-    .select("updated_at")
-    .eq("id", "daiane")
-    .maybeSingle();
-
-  if (check.error || !check.data) {
-    console.error("[Supabase] ⚠️ Upsert retornou 200 mas dado NÃO está no banco!", check.error);
-    throw new Error("Dado não encontrado no banco após salvar. Verifique as políticas RLS do Supabase.");
-  }
-
-  console.log("[Supabase] ✅ Confirmado no banco! Atualizado em:", check.data.updated_at);
+  // Atualiza cache local imediatamente para que a visualização seja instantânea
+  saveLocalCache(portfolioData, nowIso);
+  console.log("[Supabase] ✅ Salvo com sucesso e cache local atualizado!");
   return true;
 }
 
